@@ -35,7 +35,6 @@ export class ModSignWebauthn extends ModSign {
     const credential = new modsignwebauthn.credential(public_key);
     const credential_id_bytes = StringBytes.stringToBytes(credential_id);
     this.credential_storage.put(credential_id_bytes, credential);
-
   }
 
   /**
@@ -62,12 +61,12 @@ export class ModSignWebauthn extends ModSign {
 
       const client_data_decoded = StringBytes.bytesToString(client_data);
 
-      const challenge_base64url = getValueFromJSON(StringBytes.bytesToString(client_data), "challenge");
+      const challenge_base64url = getValueFromJSON(client_data_decoded, "challenge");
       const challenge_base64 = base64urlToBase64(challenge_base64url!);
       const tx_id_str = '0x' + bytesToHexString(tx_id);
       const tx_id_base64 = Base64.encode(StringBytes.stringToBytes(tx_id_str));
-      let origin = getValueFromJSON(client_data_decoded, "origin");
-      let crossOrigin = getValueFromJSON(client_data_decoded, "crossOrigin");
+      //let origin = getValueFromJSON(client_data_decoded, "origin");
+      //let crossOrigin = getValueFromJSON(client_data_decoded, "crossOrigin");
 
       // search for registered credential
       const credential_id_bytes = StringBytes.stringToBytes(credential_id);
