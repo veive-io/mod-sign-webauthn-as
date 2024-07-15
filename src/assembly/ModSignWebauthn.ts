@@ -34,17 +34,13 @@ export class ModSignWebauthn extends ModSign {
 
     const credential = new modsignwebauthn.credential(public_key);
     const credential_id_bytes = StringBytes.stringToBytes(credential_id);
-    this.credential_storage.put(credential_id_bytes, credential);
+    this.credential_storage.put(creden   * @external
+      */tial_id_bytes, credential);
   }
 
   /**
- * Validates an WebauthN signature to ensure the authenticity of a transaction.
- * 
- * This method checks the length of the provided signature, recovers the public key from the signature
- * and transaction ID, and verifies that the recovered address matches the expected sender.
- * 
- * @external
- */
+   * @external
+   */
   is_valid_signature(args: modsign.is_valid_signature_args): modsign.is_valid_signature_result {
     const result = new modsign.is_valid_signature_result(false);
 
