@@ -1,7 +1,7 @@
 import { StringBytes, System, Storage, Base58, Base64, Arrays, Protobuf } from "@koinos/sdk-as";
 import { modsignwebauthn } from "./proto/modsignwebauthn";
 import { ModSign, modsign, MODULE_SIGN_TYPE_ID } from "@veive/mod-sign-as";
-import { base64urlToBase64, bytesToHexString, extractMsg, extractPublicKey, extractSignature, getValueFromJSON } from "./utils";
+import { base64urlToBase64, extractMsg, extractPublicKey, extractSignature, getValueFromJSON } from "./utils";
 import { IVerifier } from "./verifier/IVerifier";
 import { verifier } from "./verifier/verifier";
 import { CREDENTIAL_STORAGE_SPACE_ID, VERIFIER_CONTRACT_ID } from "./Constants";
@@ -56,7 +56,7 @@ export class ModSignWebauthn extends ModSign {
 
       const challenge_base64url = getValueFromJSON(client_data_decoded, "challenge");
       const challenge_base64 = base64urlToBase64(challenge_base64url!);
-      const tx_id_str = '0x' + bytesToHexString(tx_id);
+      const tx_id_str = Arrays.toHexString(tx_id);
       const tx_id_base64 = Base64.encode(StringBytes.stringToBytes(tx_id_str));
       //let origin = getValueFromJSON(client_data_decoded, "origin");
       //let crossOrigin = getValueFromJSON(client_data_decoded, "crossOrigin");
