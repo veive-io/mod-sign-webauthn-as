@@ -21,6 +21,11 @@ When validating a signature, the module performs the following steps:
 4. Verify the signature using the public key and the message.
 5. Check that the transaction ID matches the challenge from the client data.
 
+### Settings
+
+You need to set the `VERIFIER_CONTRACT_ID` inside the `Constants.ts` file and the relative private key in `VERIFIER_PRIVATE_KEY` inside the `.env` file.
+This is the contract to call to verify the signature with curve p256.
+
 ## Installation
 
 To install the package, use npm or yarn:

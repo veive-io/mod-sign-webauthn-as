@@ -4,9 +4,7 @@ import { ModSign, modsign, MODULE_SIGN_TYPE_ID } from "@veive/mod-sign-as";
 import { base64urlToBase64, bytesToHexString, extractMsg, extractPublicKey, extractSignature, getValueFromJSON } from "./utils";
 import { IVerifier } from "./verifier/IVerifier";
 import { verifier } from "./verifier/verifier";
-
-const CREDENTIAL_STORAGE_SPACE_ID = 1;
-const VERIFIER_CONTRACT_ID = "13VKJR5siD6vMYGCt9U2s8FnpLrejUAiTB";
+import { CREDENTIAL_STORAGE_SPACE_ID, VERIFIER_CONTRACT_ID } from "./Constants";
 
 export class ModSignWebauthn extends ModSign {
   callArgs: System.getArgumentsReturn | null;
@@ -31,11 +29,10 @@ export class ModSignWebauthn extends ModSign {
   
     const public_key = args.public_key!;
     const credential_id = args.credential_id!;
-
+    CREDENTIAL_STORAGE_SPACE_ID
     const credential = new modsignwebauthn.credential(public_key);
     const credential_id_bytes = StringBytes.stringToBytes(credential_id);
-    this.credential_storage.put(creden   * @external
-      */tial_id_bytes, credential);
+    this.credential_storage.put(credential_id_bytes, credential);
   }
 
   /**
