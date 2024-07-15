@@ -1,15 +1,21 @@
 syntax = "proto3";
 
-package modvalidatewebauthn;
+package modsignwebauthn;
 
 import "koinos/options.proto";
 
+message credential {
+   bytes public_key = 1;
+}
+
 message register_arguments {
-   bytes user = 1 [(koinos.btype) = ADDRESS];
    string credential_id = 2;
    bytes public_key = 3;
 }
 
-message register_result {
-   int64 value = 1;
+message authentication_data {
+   string credential_id = 1;
+   bytes signature = 2;
+   bytes authenticator_data = 3;
+   bytes client_data = 4;
 }

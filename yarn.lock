@@ -1764,6 +1764,70 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@veive/account-as@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@veive/account-as/-/account-as-1.0.11.tgz#4b1165a0285a90ed8ab45dd288a36c7335aa2d6f"
+  integrity sha512-VqFAUU4AuTPJDDRnpPbxLmy+evL/2ZRIPJmPQETpZqsHb1Eu0oPg0mkye4aWs8rtWSwb7QBKLcWVk1OxHI5SbQ==
+  dependencies:
+    "@koinos/sdk-as" "npm:@koinosbox/sdk-as@1.1.0-alpha.4"
+    "@koinosbox/contracts" "^2.1.4"
+    "@koinosbox/hdkoinos" "1.0.1"
+    "@veive/mod-execution-as" "^1.0.5"
+    "@veive/mod-hooks-as" "^1.0.6"
+    "@veive/mod-sign-as" "^1.0.0"
+    "@veive/mod-validation-as" "^1.0.13"
+    koilib "^8.0.0"
+    koinos-precompiler-as "^1.6.0"
+
+"@veive/mod-execution-as@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@veive/mod-execution-as/-/mod-execution-as-1.0.5.tgz#75796acdb705e57e9b4b18525c37b6c93ab85465"
+  integrity sha512-tbA1TEQCOX43ZQa4ShWDAO+6OBdwcIlFBvWbBKR6fXH0EHIy0n7PErTH2e5ebd9iMsqavpgRpDRQJ4VdvU8nrA==
+  dependencies:
+    "@koinos/sdk-as" "npm:@koinosbox/sdk-as@1.1.0-alpha.4"
+    "@koinosbox/contracts" "^2.1.4"
+    "@koinosbox/hdkoinos" "1.0.1"
+    koilib "^8.0.0"
+    koinos-precompiler-as "^1.6.0"
+
+"@veive/mod-hooks-as@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@veive/mod-hooks-as/-/mod-hooks-as-1.0.6.tgz#e2109ff188605ddb48da9f200102644006bf6caf"
+  integrity sha512-/TZ3D3Wbc4skW0nKfWzF/4yHIy519zXSRUQgwqGmhdTXWc3YXkRdyxrDUxu2CaSCI7Meh6KvsK3Qp+DD21A9Cg==
+  dependencies:
+    "@koinos/sdk-as" "npm:@koinosbox/sdk-as@1.1.0-alpha.4"
+    "@koinosbox/contracts" "^2.1.4"
+    "@koinosbox/hdkoinos" "1.0.1"
+    koilib "^8.0.0"
+    koinos-precompiler-as "^1.6.0"
+
+"@veive/mod-sign-as@^1.0.0":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@veive/mod-sign-as/-/mod-sign-as-1.0.1.tgz#f691adcde0044b9b4e0d25def9460e886a6d80ee"
+  integrity sha512-kchLyvvGnb0ouqYn3QAHevj06BCSgN9nMFS4FZYrPyf0aLBQTa5VXHo8Fp50PRN4rAuJwGX9tItWD0mqdYFasQ==
+  dependencies:
+    "@koinos/sdk-as" "npm:@koinosbox/sdk-as@1.1.0-alpha.4"
+    "@koinosbox/contracts" "^2.1.4"
+    "@koinosbox/hdkoinos" "1.0.1"
+    koilib "^8.0.0"
+    koinos-precompiler-as "^1.6.0"
+
+"@veive/mod-validation-as@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@veive/mod-validation-as/-/mod-validation-as-1.0.13.tgz#b382759788dd06c81cafaef40f55589e21ab7733"
+  integrity sha512-DtLdBme9tiRowsQPM/DjUZVmVuhStQaWq6USvQrqLQb6umtm+hXiqK4ckOSXyoDMnK36CSOxrL3XLLPelQyJpw==
+  dependencies:
+    "@koinos/sdk-as" "npm:@koinosbox/sdk-as@1.1.0-alpha.4"
+    "@koinosbox/contracts" "^2.1.4"
+    "@koinosbox/hdkoinos" "1.0.1"
+    koilib "^8.0.0"
+    koinos-precompiler-as "^1.6.0"
+
+"@veive/verifier-p256@^1.0.1":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@veive/verifier-p256/-/verifier-p256-1.0.5.tgz#fd4845473c61c771ab63886f0d7897e3ce950141"
+  integrity sha512-Jb4O5BpUJu2mM/aVKqYxWbMJ8hCv4PvYHz+5Hgv+iLgm26wRRVeAkln1d+ow7VjU+95+64jTxtH/ECJFtEnNuA==
+
 JSONStream@^1.3.4, JSONStream@^1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.5.tgz#3208c1f08d3a4d99261ab64f92302bc15e111ca0"
@@ -5208,7 +5272,7 @@ koilib@^8.0.0:
     multibase "^4.0.6"
     protobufjs "^7.2.4"
 
-koinos-precompiler-as@^1.5.1:
+koinos-precompiler-as@^1.5.1, koinos-precompiler-as@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/koinos-precompiler-as/-/koinos-precompiler-as-1.6.0.tgz#79746074d90bbe8b159f03b0fb3145341ef54e65"
   integrity sha512-0SNP4qBgQI0lsNnI7rgkB0ovAGw9C7ohQQ6CLub//VkO81j0busw+CvHcmzoIRMPqR91O1eY6Z4Z29RFrK+H8A==

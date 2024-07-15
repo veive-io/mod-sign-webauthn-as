@@ -27,7 +27,9 @@
     "@koinosbox/contracts": "^2.1.4",
     "@koinosbox/hdkoinos": "1.0.1",
     "koilib": "^8.0.0",
-    "koinos-precompiler-as": "^1.5.1"
+    "koinos-precompiler-as": "^1.5.1",
+    "@veive/account-as": "^1.0.11",
+    "@veive/verifier-p256": "^1.0.1"
   },
   "devDependencies": {
     "@as-covers/core": "^0.4.2",

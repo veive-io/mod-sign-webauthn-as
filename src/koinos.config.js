@@ -27,7 +27,17 @@ module.exports = {
   supportAbi1: true,
   sourceDir: "./assembly",
   buildDir: "../build",
+  filesImport: [
+    {
+      dependency: "@veive/mod-sign-as",
+      path: "../node_modules/@veive/mod-sign-as/dist/ModSign.ts",
+    }
+  ],
   protoImport: [
+    {
+      name: "@veive/mod-sign-as",
+      path: "../node_modules/@veive/mod-sign-as/dist/proto/modsign",
+    },
     {
       name: "@koinosbox/contracts",
       path: "../node_modules/@koinosbox/contracts/koinosbox-proto",
