@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package modvalidatewebauthn;
+
+import "koinos/options.proto";
+
+message register_arguments {
+   bytes user = 1 [(koinos.btype) = ADDRESS];
+   string credential_id = 2;
+   bytes public_key = 3;
+}
+
+message register_result {
+   int64 value = 1;
+}
