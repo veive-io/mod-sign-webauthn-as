@@ -1,10 +1,9 @@
-import { StringBytes, System, Storage, Base58, Base64, Arrays, Protobuf } from "@koinos/sdk-as";
+import { StringBytes, System, Storage, Base58, Base64, Arrays, Protobuf, authority } from "@koinos/sdk-as";
 import { modsignwebauthn } from "./proto/modsignwebauthn";
 import { ModSign, modsign, MODULE_SIGN_TYPE_ID } from "@veive/mod-sign-as";
 import { base64urlToBase64, extractMsg, extractPublicKey, extractSignature, getValueFromJSON } from "./utils";
-import { IVerifier } from "./verifier/IVerifier";
-import { verifier } from "./verifier/verifier";
-import { CREDENTIAL_STORAGE_SPACE_ID, VERIFIER_CONTRACT_ID } from "./Constants";
+import { CREDENTIAL_STORAGE_SPACE_ID, ACCOUNT_SPACE_ID, VERIFIER_CONTRACT_ID } from "./Constants";
+import { verifier, IVerifier } from "@veive/verifier-p256";
 
 export class ModSignWebauthn extends ModSign {
   callArgs: System.getArgumentsReturn | null;
@@ -20,16 +19,24 @@ export class ModSignWebauthn extends ModSign {
       () => new modsignwebauthn.credential()
     );
 
+  account_id: Storage.Obj<modsignwebauthn.account_id> =
+    new Storage.Obj(
+      this.contractId,
+      ACCOUNT_SPACE_ID,
+      modsignwebauthn.account_id.decode,
+      modsignwebauthn.account_id.encode,
+      () => new modsignwebauthn.account_id()
+    );
+
   /**
    * @external
    */
   register(args: modsignwebauthn.register_arguments): void {
-    //const isAuthorized = System.checkAuthority(authority.authorization_type.contract_call, args.user!);
-    //System.require(isAuthorized, `not authorized by ${Base58.encode(args.user!)}`);
-  
+    const isAuthorized = System.checkAuthority(authority.authorization_type.contract_call, this.account_id.get()!.value!);
+    System.require(isAuthorized, `not authorized by ${Base58.encode(this.account_id.get()!.value!)}`);
+
     const public_key = args.public_key!;
     const credential_id = args.credential_id!;
-    CREDENTIAL_STORAGE_SPACE_ID
     const credential = new modsignwebauthn.credential(public_key);
     const credential_id_bytes = StringBytes.stringToBytes(credential_id);
     this.credential_storage.put(credential_id_bytes, credential);
@@ -64,7 +71,7 @@ export class ModSignWebauthn extends ModSign {
       // search for registered credential
       const credential_id_bytes = StringBytes.stringToBytes(credential_id);
       const credential = this.credential_storage.get(credential_id_bytes);
-      if(credential == null || credential.public_key == null) {
+      if (credential == null || credential.public_key == null) {
         System.log(`[mod-sign-webauthn] credential not registered`);
         return result;
       }
@@ -107,6 +114,40 @@ export class ModSignWebauthn extends ModSign {
     }
 
     return result;
+  }
+
+  /**
+   * Get credential pairs
+   *
+   * @external
+   * @readonly
+   * @param args
+   * @returns
+   */
+  get_credentials(): modsignwebauthn.get_credentials_result {
+    const credential_pairs: modsignwebauthn.credential_pair[] = [];
+    const credentialDataKeys = this.credential_storage.getManyKeys(new Uint8Array(0));
+    for (let i = 0; i < credentialDataKeys.length; i++) {
+      const credential_pair = new modsignwebauthn.credential_pair();
+      const credential_key = credentialDataKeys[i];
+      const credential = this.credential_storage.get(credential_key)!;
+      credential_pair.credential_id = StringBytes.bytesToString(credential_key);
+      credential_pair.public_key = credential.public_key;
+      credential_pairs.push(credential_pair);
+    }
+    const res = new modsignwebauthn.get_credentials_result();
+    res.value = credential_pairs;
+    return res;
+  }
+
+  /**
+  * @external
+  */
+  on_install(args: modsign.on_install_args): void {
+    const account = new modsignwebauthn.account_id();
+    account.value = System.getCaller().caller;
+    this.account_id.put(account);
+    System.log('[mod-sign-webauthn] called on_install');
   }
 
   /**

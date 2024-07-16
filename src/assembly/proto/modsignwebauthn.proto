@@ -4,6 +4,10 @@ package modsignwebauthn;
 
 import "koinos/options.proto";
 
+message account_id {
+   bytes value = 1 [(koinos.btype) = ADDRESS];
+}
+
 message credential {
    bytes public_key = 1;
 }
@@ -18,4 +22,13 @@ message authentication_data {
    bytes signature = 2;
    bytes authenticator_data = 3;
    bytes client_data = 4;
+}
+
+message get_credentials_result {
+   repeated credential_pair value = 1;
+}
+
+message credential_pair {
+   string credential_id = 1;
+   bytes public_key = 2;
 }

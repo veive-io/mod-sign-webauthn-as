@@ -1,17 +1,18 @@
 import { LocalKoinos } from "@roamin/local-koinos";
-import { Contract, Signer, Transaction, utils, Provider } from "koilib";
+import { Contract, Signer, Transaction, Provider } from "koilib";
 import path from "path";
 import { randomBytes } from "crypto";
 import { beforeAll, afterAll, it, expect } from "@jest/globals";
 import * as dotenv from "dotenv";
 import * as modAbi from "../build/modsignwebauthn-abi.json";
+import * as accountAbi from "@veive/account-as/dist/account-abi.json";
 import { promises as fs } from 'fs';
 
 dotenv.config();
 
 jest.setTimeout(600000);
 
-const verifierAbiPath = path.join(__dirname, "/../node_modules/@veive/verifier-p256/abi/verifier.koilib.abi");
+const verifierAbiPath = path.join(__dirname, "/../node_modules/@veive/verifier-p256/dist/abi/verifier.koilib.abi");
 
 const TEST_DATA = {
     CREDENTIAL_ID: "fDy_0augtGWmEyId1pKCNfiJgh7PHpM9ma3QiEjRlY4",
@@ -39,6 +40,12 @@ const accountSign = new Signer({
     provider
 });
 
+const accountContract = new Contract({
+    id: accountSign.getAddress(),
+    abi: accountAbi,
+    provider
+}).functions;
+
 const verifireSign = Signer.fromWif(process.env.VERIFIER_PRIVATE_KEY);
 verifireSign.provider = provider;
 
@@ -60,9 +67,24 @@ beforeAll(async () => {
     // deploy verifier
     await localKoinos.deployContract(
         verifireSign.getPrivateKey("wif"),
-        path.join(__dirname, "../node_modules/@veive/verifier-p256/build/src/verifier.wasm"),
+        path.join(__dirname, "../node_modules/@veive/verifier-p256/dist/release/verifier.wasm"),
         verifierAbi
     );
+
+    // deploy account contract
+    await localKoinos.deployContract(
+        accountSign.getPrivateKey("wif"),
+        path.join(__dirname, "../node_modules/@veive/account-as/dist/release/Account.wasm"),
+        accountAbi,
+        {},
+        {
+            authorizesCallContract: true,
+            authorizesTransactionApplication: false,
+            authorizesUploadContract: false,
+        }
+    );
+
+
 });
 
 afterAll(() => {
@@ -70,11 +92,42 @@ afterAll(() => {
     localKoinos.stopNode();
 });
 
+it("install module", async () => {
+    const { operation: install_module } = await accountContract["install_module"]({
+        module_type_id: 4,
+        contract_id: modSign.address
+    }, { onlyOperation: true });
+
+    const tx = new Transaction({
+        signer: accountSign,
+        provider
+    });
+
+    const { operation: exec } = await accountContract["execute_user"]({
+        operation: {
+            contract_id: install_module.call_contract.contract_id,
+            entry_point: install_module.call_contract.entry_point,
+            args: install_module.call_contract.args
+        }
+    }, { onlyOperation: true });
+
+    await tx.pushOperation(exec);
+    const receipt = await tx.send();
+    await tx.wait();
+
+    expect(receipt).toBeDefined();
+    expect(receipt.logs).toContain("[mod-sign-webauthn] called on_install");
+
+    const { result } = await accountContract["get_modules"]();
+    expect(result.value[0]).toStrictEqual(modSign.address);
+});
+
 it("register credential", async () => {
-    const { operation } = await modContract['register']({
+    const credentialPair = {
         credential_id: TEST_DATA.CREDENTIAL_ID,
         public_key: TEST_DATA.PUBLIC_KEY
-    }, { onlyOperation: true });
+    };
+    const { operation } = await modContract['register'](credentialPair, { onlyOperation: true });
 
     //send operations
     const tx = new Transaction({
@@ -88,6 +141,9 @@ it("register credential", async () => {
 
     expect(rc).toBeDefined();
     await tx.wait();
+
+    const { result } = await modContract['get_credentials']();
+    expect(result.value).toStrictEqual([credentialPair]);
 });
 
 it("validate signature", async () => {
@@ -103,7 +159,6 @@ it("validate signature", async () => {
         provider
     });
 
-    //await tx.pushOperation(setAllowances);
     await tx.pushOperation(operation);
     const rc = await tx.send();
     await tx.wait();
@@ -111,4 +166,4 @@ it("validate signature", async () => {
     console.log(rc);
     expect(rc).toBeDefined();
     expect(rc.logs).toContain('[mod-sign-webauthn] valid signature found');
-})
+});

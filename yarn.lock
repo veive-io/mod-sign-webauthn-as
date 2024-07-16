@@ -1823,10 +1823,10 @@
     koilib "^8.0.0"
     koinos-precompiler-as "^1.6.0"
 
-"@veive/verifier-p256@^1.0.1":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@veive/verifier-p256/-/verifier-p256-1.0.5.tgz#fd4845473c61c771ab63886f0d7897e3ce950141"
-  integrity sha512-Jb4O5BpUJu2mM/aVKqYxWbMJ8hCv4PvYHz+5Hgv+iLgm26wRRVeAkln1d+ow7VjU+95+64jTxtH/ECJFtEnNuA==
+"@veive/verifier-p256@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@veive/verifier-p256/-/verifier-p256-1.0.9.tgz#01008a6cbc261d544fd69176248e3d5412286e80"
+  integrity sha512-b4um28Tc8vr3MCuHisSk1FQ8rEFI1L1nahOBE04QPO+jKK84dedMiuVY02GnvNoy1JVLeLvyowHaZc/V4aHVFg==
 
 JSONStream@^1.3.4, JSONStream@^1.3.5:
   version "1.3.5"

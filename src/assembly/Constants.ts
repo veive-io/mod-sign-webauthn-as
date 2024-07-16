@@ -1,2 +1,3 @@
 export const CREDENTIAL_STORAGE_SPACE_ID = 1;
+export const ACCOUNT_SPACE_ID = 2;
 export const VERIFIER_CONTRACT_ID = "13VKJR5siD6vMYGCt9U2s8FnpLrejUAiTB";
