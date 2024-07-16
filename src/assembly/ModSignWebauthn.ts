@@ -32,8 +32,8 @@ export class ModSignWebauthn extends ModSign {
    * @external
    */
   register(args: modsignwebauthn.register_arguments): void {
-    const isAuthorized = System.checkAuthority(authority.authorization_type.contract_call, this.account_id.get()!.value!);
-    System.require(isAuthorized, `not authorized by ${Base58.encode(this.account_id.get()!.value!)}`);
+    const isAuthorized = System.checkAuthority(authority.authorization_type.contract_call, this._get_account_id());
+    System.require(isAuthorized, `not authorized by the account`);
 
     const public_key = args.public_key!;
     const credential_id = args.credential_id!;
@@ -141,6 +141,16 @@ export class ModSignWebauthn extends ModSign {
   }
 
   /**
+   * Get associated account_id
+   * 
+   * @external
+   * @readonly
+   */
+  get_account_id(): modsignwebauthn.account_id {
+    return this.account_id.get()!;
+  }
+
+  /**
   * @external
   */
   on_install(args: modsign.on_install_args): void {
@@ -160,5 +170,12 @@ export class ModSignWebauthn extends ModSign {
     result.description = "Module for validation of WebauthN signatures";
     result.type_id = MODULE_SIGN_TYPE_ID;
     return result;
+  }
+
+  /**
+   * return account id
+   */
+  _get_account_id(): Uint8Array {
+    return this.account_id.get()!.value!;
   }
 }
