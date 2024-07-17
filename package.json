@@ -1,6 +1,6 @@
 {
   "name": "@veive/mod-sign-webauthn-as",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "veive",
     "email": "contact@veive.io",
@@ -26,10 +26,10 @@
     "@koinos/sdk-as": "npm:@koinosbox/sdk-as@1.1.0-alpha.4",
     "@koinosbox/contracts": "^2.1.4",
     "@koinosbox/hdkoinos": "1.0.1",
+    "@veive/account-as": "^1.0.12",
+    "@veive/verifier-p256": "^1.0.9",
     "koilib": "^8.0.0",
-    "koinos-precompiler-as": "^1.5.1",
-    "@veive/account-as": "^1.0.11",
-    "@veive/verifier-p256": "^1.0.9"
+    "koinos-precompiler-as": "^1.5.1"
   },
   "devDependencies": {
     "@as-covers/core": "^0.4.2",
@@ -59,7 +59,8 @@
     "deploy": "ts-node scripts/deploy.ts",
     "dist": "ts-node scripts/dist.ts",
     "keys": "node generateKeys.js",
-    "lint": "eslint --max-warnings 0 --ext ts \"*/assembly/**/*.ts\""
+    "lint": "eslint --max-warnings 0 --ext ts \"*/assembly/**/*.ts\"",
+    "prepublishOnly": "yarn build && yarn dist"
   },
   "config": {
     "protocVersion": "25.2"
