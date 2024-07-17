@@ -12,7 +12,6 @@ const abi = `${className.toLocaleLowerCase()}-abi.json`;
 
 const filesToCopy: string[] = [
   `I${className}.ts`,
-  `${className}.ts`,
   ...protoFiles,
   ...protoTs,
   abi,
