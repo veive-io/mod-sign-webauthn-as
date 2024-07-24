@@ -1,65 +1,77 @@
-### Veive SCA Webauthn Signature Validation Module
+## **Mod Sign Webauthn**
 
-The `ModSignWebauthn` class is a WebAuthn signature validation module designed for the Koinos blockchain. It extends the `ModSign` module from the Veive protocol, providing functionality to register WebAuthn credentials and validate signatures.
+### **Overview**
 
-## Overview
+`ModSignWebauthn` is a module within the Veive protocol that introduces the WebAuthn standard for signing transactions. WebAuthn, part of the FIDO2 project, enables strong authentication using public key cryptography. This module allows users to register their devices and authenticate using passkeys, enhancing security and usability.
 
-The `ModSignWebauthn` module allows users to register their WebAuthn credentials, including the credential ID and public key, and validate WebAuthn signatures. This is useful for integrating WebAuthn-based authentication and signature validation in decentralized applications on the Koinos blockchain.
+### **Functional Description**
 
-## How It Works
+#### **WebAuthn and Passkeys**
 
-### Credential Registration
+WebAuthn is a web standard for secure authentication, using devices like security keys, smartphones, or built-in platform authenticators (like Windows Hello or Touch ID). Passkeys are the credentials generated during the registration process, comprising a public-private key pair. The public key is stored on the server (or, in this case, on the blockchain), while the private key remains securely on the user's device.
 
-When a user registers their WebAuthn credential, the module stores the credential ID and public key. This information is used later to validate signatures.
+##### **Key Components in WebAuthn**
 
-### Signature Validation
+- **Credential ID**: A unique identifier for each registered credential, used to retrieve the public key associated with a user.
+- **Public Key**: The public portion of the key pair, used by the server to verify signatures created by the private key.
+- **Authenticator Data**: Information provided by the authenticator, including the signature.
 
-When validating a signature, the module performs the following steps:
-1. Decode the authentication data from the signature.
-2. Retrieve the registered credential using the credential ID.
-3. Extract the public key and signature from the authentication data.
-4. Verify the signature using the public key and the message.
-5. Check that the transaction ID matches the challenge from the client data.
+#### **How `ModSignWebauthn` Works**
 
-### Settings
+1. **Registration**:
+   - Users register their devices, generating a public-private key pair. The `register` method stores the public key and the credential ID on the blockchain, linking them to the user's account.
 
-You need to set the `VERIFIER_CONTRACT_ID` inside the `Constants.ts` file and the relative private key in `VERIFIER_PRIVATE_KEY` inside the `.env` file.
-This is the contract to call to verify the signature with curve p256.
+2. **Signature Validation**:
+   - When a transaction is signed using WebAuthn, the `is_valid_signature` method is called to validate the signature. This method checks if the signature is valid by:
+     - Decoding the transaction's signature data to extract the `credential_id`, `authenticator_data`, and `client_data`.
+     - Retrieving the stored public key using the `credential_id`.
+     - Verifying the signature against the extracted message using the public key.
 
-## Installation
+This module does not implement the actual cryptographic checks but rather delegates this task to a verifier contract specified by `VERIFIER_CONTRACT_ID`. This separation of concerns allows for the integration of various cryptographic verification methods while keeping the `ModSignWebauthn` module focused on managing WebAuthn credentials and invoking the signature verification process.
 
-To install the package, use npm or yarn:
+### **Implementation Details**
+
+#### **Key Storage and Methods**
+
+1. **Storage Objects**
+   - `credential_storage`: A map that stores the public keys associated with each `credential_id`. This storage enables the module to verify signatures by accessing the public keys registered during the initial setup.
+   - `account_id`: Stores the ID of the associated account, ensuring that only authorized users can manage credentials.
+
+2. **Methods**
+   - **`register`**:
+     - **Purpose**: Registers a new WebAuthn credential, storing the public key and `credential_id`.
+     - **Implementation**: The method ensures the caller is authorized and then stores the credential information in `credential_storage`.
+
+   - **`is_valid_signature`**:
+     - **Purpose**: Validates a signature using the stored WebAuthn public key.
+     - **Implementation**: The method retrieves the appropriate public key and uses it to verify the transaction's signature against the provided data. It uses the verifier contract to perform the actual cryptographic checks.
+
+   - **`get_credentials`**:
+     - **Purpose**: Retrieves all registered credentials for the account.
+     - **Implementation**: This method provides a list of all `credential_id` and public key pairs stored in `credential_storage`.
+
+   - **`manifest`**:
+     - **Purpose**: Provides metadata and configuration settings for the module.
+     - **Implementation**: This includes the module's name, description, type ID, and associated scopes, which dictate when the module is invoked during transaction processing.
+
+   - **`on_install`**:
+     - **Purpose**: Initializes the module upon installation, setting the account ID and other necessary configurations.
+
+### **Usage**
+
+#### **Installation**
+
+To install the `ModSignWebauthn` module, first ensure that the Veive protocol is set up on your Koinos blockchain environment. Install the module using yarn:
 
 ```bash
-npm install @veive/mod-sign-webauthn
+yarn add @veive/mod-sign-webauthn-as
 ```
 
-## Usage
+Deploy the module contract on the Koinos blockchain and install it on the desired account using the `install_module` method provided by the Veive account interface. The `on_install` method initializes necessary settings, including the account ID.
 
-### Importing the Package
+#### **Scripts**
 
-First, import the necessary components from the package:
-
-```typescript
-import { ModSignWebauthn } from '@veive/mod-sign-webauthn';
-```
-
-## Interface and Methods
-
-The `ModSignWebauthn` class provides several methods for managing WebAuthn credentials and validating signatures. Below is a brief overview of the key methods:
-
-### `register`
-Registers a WebAuthn credential by storing the credential ID and public key.
-
-### `is_valid_signature`
-Validates a WebAuthn signature by decoding the authentication data and verifying the signature using the registered public key.
-
-### `manifest`
-Returns the manifest of the module, including the name, description, and type ID.
-
-## Scripts
-
-### Build
+##### Build
 
 To compile the package, run:
 
@@ -67,15 +79,7 @@ To compile the package, run:
 yarn build
 ```
 
-### Test
-
-To run the tests, run:
-
-```bash
-yarn jest
-```
-
-### Dist
+##### Dist
 
 To create a distribution, run:
 
@@ -83,10 +87,18 @@ To create a distribution, run:
 yarn dist
 ```
 
-## Contributing
+##### Test
+
+To test the package, use:
+
+```bash
+yarn jest
+```
+
+### **Contributing**
 
 Contributions are welcome! Please open an issue or submit a pull request on the [GitHub repository](https://github.com/veiveprotocol).
 
-## License
+### **License**
 
 This project is licensed under the MIT License. See the LICENSE file for details.
