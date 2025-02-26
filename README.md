@@ -4,6 +4,8 @@
 
 `ModSignWebauthn` is a module within the Veive protocol that introduces the WebAuthn standard for signing transactions. WebAuthn, part of the FIDO2 project, enables strong authentication using public key cryptography. This module allows users to register their devices and authenticate using passkeys, enhancing security and usability.
 
+Full documentation: https://docs.veive.io/veive-docs/framework/core-modules/mod-sign-webauthn
+
 ## **Purpose**
 
 WebAuthn is a web standard for secure authentication, using devices like security keys, smartphones, or built-in platform authenticators (like Windows Hello or Touch ID). Passkeys are the credentials generated during the registration process, comprising a public-private key pair. The public key is stored on the server (or, in this case, on the blockchain), while the private key remains securely on the user's device.
